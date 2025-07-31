@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>BotWar</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e1e;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .controller {
+      display: grid;
+      grid-template-areas:
+        ".    up    ."
+        "left stay right"
+        ".   down   .";
+      gap: 10px;
+    }
+
+    .controller button,
+    .actions button {
+      padding: 15px 20px;
+      background: #333;
+      border: 2px solid #555;
+      color: white;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .controller button:hover,
+    .actions button:hover {
+      background-color: #555;
+      transform: scale(1.05);
+    }
+
+    .controller button[data-dir="up"]    { grid-area: up; }
+    .controller button[data-dir="down"]  { grid-area: down; }
+    .controller button[data-dir="left"]  { grid-area: left; }
+    .controller button[data-dir="right"] { grid-area: right; }
+    .controller button[data-dir="stay"]  { grid-area: stay; background-color: #444; }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .bomb-type {
+      display: none;
+      margin-top: 10px;
+    }
+
+    pre {
+      background: #111;
+      padding: 10px;
+      border: 1px solid #444;
+      width: 300px;
+      text-align: left;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>BotWar</h1>
+
+  <div class="controller">
+    <button data-dir="up">↑</button>
+    <button data-dir="left">←</button>
+    <button data-dir="stay">⏺</button>
+    <button data-dir="right">→</button>
+    <button data-dir="down">↓</button>
+  </div>
+
+  <div class="actions">
+    <button data-action="COLLECT">Collect</button>
+    <button data-action="ATTACK">Attack</button>
+    <button data-action="BOMB">Bomb</button>
+    <button data-action="NONE">None</button>
+  </div>
+
+  <div class="bomb-type" id="bombTypeContainer">
+    <label>Bomb Type:
+      <select id="bombType">
+        <option>proximity</option>
+        <option>timer</option>
+        <option>static</option>
+      </select>
+    </label>
+  </div>
+
+  <pre id="response">Choisis une direction et une action !</pre>
+
+  <script>
+    let currentMove = 'STAY';
+    let currentAction = 'COLLECT';
+
+    document.querySelectorAll('.controller button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentMove = btn.getAttribute('data-dir');
+        sendCommand();
+      });
+    });
+
+    document.querySelectorAll('.actions button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentAction = btn.getAttribute('data-action');
+        document.getElementById('bombTypeContainer').style.display =
+          currentAction === 'BOMB' ? 'block' : 'none';
+        sendCommand();
+      });
+    });
+
+    function sendCommand() {
+      let url = `https://botwar-manette.onrender.com/action?move=${currentMove}&action=${currentAction}`;
+      if (currentAction === 'BOMB') {
+        const bombType = document.getElementById('bombType').value;
+        url += `&bombType=${bombType}`;
+      }
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+          document.getElementById('response').textContent = ' Erreur : ' + err;
+        });
+    }
+  </script>
+</body>
+</html>
