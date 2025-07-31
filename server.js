@@ -7,7 +7,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.get('/action', (req, res) => {
+app.post('/action', (req, res) => {
     const action = req.query.action || 'COLLECT';
     const move = req.query.move || 'STAY';
     const bombType = req.query.bombType;
