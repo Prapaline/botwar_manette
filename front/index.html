@@ -125,7 +125,7 @@
     });
 
     function sendCommand() {
-      let url = `http://localhost:3000/action?move=${currentMove}&action=${currentAction}`;
+      let url = `https://botwar-manette.onrender.com/action?move=${currentMove}&action=${currentAction}`;
       if (currentAction === 'BOMB') {
         const bombType = document.getElementById('bombType').value;
         url += `&bombType=${bombType}`;
@@ -137,7 +137,7 @@
           document.getElementById('response').textContent = JSON.stringify(data, null, 2);
         })
         .catch(err => {
-          document.getElementById('response').textContent = '❌ Erreur : ' + err;
+          document.getElementById('response').textContent = ' Erreur : ' + err;
         });
     }
   </script>
