@@ -7,34 +7,41 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.post('/action', (req, res) => {
-    const action = req.query.action || 'COLLECT';
-    const move = req.query.move || 'STAY';
-    const bombType = req.query.bombType;
+// app.post('/action', (req, res) => {
+//     const action = req.query.action || 'COLLECT';
+//     const move = req.query.move || 'STAY';
+//     const bombType = req.query.bombType;
 
-    const response = { move, action };
-    if (action === 'BOMB' && bombType) {
-        response.bombType = bombType;
-    }
+//     const response = { move, action };
+//     if (action === 'BOMB' && bombType) {
+//         response.bombType = bombType;
+//     }
 
-    console.log('Action envoyée au front (POST) :', response);
-    res.json(response);
-});
-
+//     console.log('Action envoyée au front (POST) :', response);
+//     res.json(response);
+// });
 
 app.get('/action', (req, res) => {
-    const action = req.query.action || 'COLLECT';
-    const move = req.query.move || 'STAY';
-    const bombType = req.query.bombType;
+    const moves = ['UP', 'DOWN', 'LEFT', 'RIGHT', 'STAY'];
+    const actions = ['COLLECT', 'ATTACK', 'BOMB', 'NONE'];
+    const randomMove = moves[Math.floor(Math.random() * moves.length)];
+    const randomAction = actions[Math.floor(Math.random() * actions.length)];
 
-    const response = { move, action };
-    if (action === 'BOMB' && bombType) {
-        response.bombType = bombType;
-    }
-
-    console.log('Action envoyée au front (GET) :', response);
-    res.json(response);
+    res.json({ move: randomMove, action: randomAction });
 });
+// app.get('/action', (req, res) => {
+//     const action = req.query.action || 'COLLECT';
+//     const move = req.query.move || 'STAY';
+//     const bombType = req.query.bombType;
+
+//     const response = { move, action };
+//     if (action === 'BOMB' && bombType) {
+//         response.bombType = bombType;
+//     }
+
+//     console.log('Action envoyée au front (GET) :', response);
+//     res.json(response);
+// });
 
 app.listen(port, () => {
     console.log(`✅ Backend API running at http://localhost:${port}`);
