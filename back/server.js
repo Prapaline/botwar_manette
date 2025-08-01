@@ -17,10 +17,10 @@ app.get('/action', (req, res) => {
         response.bombType = bombType;
     }
 
-    console.log('➡️ Action envoyée au front :', response);
+    console.log(' Action envoyée au front :', response);
     res.json(response);
 });
 
 app.listen(port, () => {
-    console.log(`✅ Backend API running at http://localhost:${port}`);
+    console.log(`Backend API running at http://localhost:${port}`);
 });
